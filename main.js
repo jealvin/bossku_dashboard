@@ -114,6 +114,27 @@ function appendForum(forum,key){
     }
 };
 
+function editForum(data, onFinish){
+  console.log(data);
+  var updates = {};
+  updates['/topics/'+ data.topicId] = data;
+  firebase.database().ref().update(updates, function(err){
+    if(onFinish != null){
+      onFinish(err);
+    }
+  });  
+};
+
+function saveForum(data, onFinish){
+  var id = firebase.database().ref().child('topics').push().key;
+  data.topicId = id;
+  console.log(data);
+  firebase.database().ref('topics/' + id).set(data,function(err){
+    if(onFinish != null){
+      onFinish(err);
+    }
+  });
+}
 
 function save_article(articleId, id, title, content, urlImg, createdAt, updatedAt) {
   bootbox.confirm("Are you sure?", function(result){ 
