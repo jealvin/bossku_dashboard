@@ -94,7 +94,7 @@ function appendArticle(article,key){
 };
 
 function appendForum(forum,key){
-    var tr = "<tr forumId='" + key +"'><td>"+ forum.title +"</td><td>" + (forum.open ? "true" : "false") + "</td></tr>";
+    var tr = "<tr forumId='" + key +"'><td>"+ forum.title +"</td><td>" + (forum.open ? "true" : "false") + "</td><td>" + (forum.member_joined ? forum.member_joined.length : 0) + "</td></tr>";
     var action = $("<td><a href='#' class='action-edit' data-toggle='modal' data-target='#forumModal' data-key='" + key + "'>edit</a> | <a href='#' class='action-delete'>delete</a></td>");
     $('.action-delete',action).click(function(){
       bootbox.confirm("Are you sure?", function(result){ 
@@ -115,7 +115,6 @@ function appendForum(forum,key){
 };
 
 function editForum(data, onFinish){
-  console.log(data);
   var updates = {};
   updates['/topics/'+ data.topicId] = data;
   firebase.database().ref().update(updates, function(err){
@@ -128,7 +127,6 @@ function editForum(data, onFinish){
 function saveForum(data, onFinish){
   var id = firebase.database().ref().child('topics').push().key;
   data.topicId = id;
-  console.log(data);
   firebase.database().ref('topics/' + id).set(data,function(err){
     if(onFinish != null){
       onFinish(err);
