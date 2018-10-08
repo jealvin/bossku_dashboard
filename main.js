@@ -71,10 +71,15 @@ function deleteForum(key){
   firebase.database().ref('topics/' + key).remove();
 };
 
+function sendNewsNotif(key){
+  $.get( "https://us-central1-bosq-indonesia.cloudfunctions.net/sendNotifNews?key=" + key, function( data ) {
+    console.log('send notif' + data);
+  });
+};
 
 function appendArticle(article,key){
     var tr = "<tr articleId='" + key +"'><td>"+ article.title +"</td></tr>";
-    var action = $("<td><a href='add-news.html?key=" + key + "' class='action-edit'>edit</a> | <a href='#' class='action-delete'>delete</a></td>");
+    var action = $("<td><a href='add-news.html?key=" + key + "' class='action-edit'>edit</a> | <a href='#' class='action-delete'>delete</a> | <a href='#' class='action-notif'>Push Notif</a></td>");
     $('.action-delete',action).click(function(){
       bootbox.confirm("Are you sure?", function(result){ 
         if(result){
@@ -82,6 +87,14 @@ function appendArticle(article,key){
         }
       });
     });
+    $('.action-notif',action).click(function(){
+      bootbox.confirm("Are you sure?", function(result){ 
+        if(result){
+          sendNewsNotif(key);
+        }
+      });
+    });
+
     var _tr = $(tr);
     _tr.append(action);
 
